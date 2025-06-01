@@ -9,13 +9,10 @@ import { selectAllUsers, selectUserById } from './userSlice'
  const selectUI = (state) => state.users.ui
  export const selectError = (state) => state.users.error
 
-// Export individual user selectors
 export { selectUserById }
 
-// Server-paginated users
 export const selectPaginatedUsers = selectUsers
 
-// Pagination Info
 export const selectPaginationInfo = createSelector(
   [selectPagination],
   (pagination) => {
@@ -38,7 +35,6 @@ export const selectPaginationInfo = createSelector(
   }
 )
 
-// Loading States
 export const selectLoadingStates = createSelector(
   [selectUI],
   (ui) => ({
@@ -53,7 +49,6 @@ export const selectLoadingStates = createSelector(
   })
 )
 
-// Search Results
 export const selectSearchResults = createSelector(
   [selectUsers, selectFilters],
   (users, filters) => {

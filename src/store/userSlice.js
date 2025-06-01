@@ -1,12 +1,10 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit'
 
-// Create Entity Adapter for Users
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user.id,
   sortComparer: (a, b) => a.name.localeCompare(b.name),
 })
 
-// Async Thunks with Server-side Pagination
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async ({ page = 1, limit = 5, search = '' } = {}, { rejectWithValue }) => {
@@ -163,7 +161,6 @@ export const searchUsers = createAsyncThunk(
   }
 )
 
-// Initial State using Entity Adapter
 const initialState = usersAdapter.getInitialState({
   selectedUser: null,
   filters: {
@@ -239,7 +236,6 @@ const userSlice = createSlice({
   },
   
   extraReducers: (builder) => {
-    // Fetch Users (Paginated)
     builder
       .addCase(fetchUsers.pending, (state) => {
         state.ui.isLoading = true
@@ -261,7 +257,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Failed to fetch users'
       })
 
-    // Search Users
     builder
       .addCase(searchUsers.pending, (state) => {
         state.ui.isSearching = true
@@ -282,7 +277,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Failed to search users'
       })
     
-    // Create User
     builder
       .addCase(createUser.pending, (state) => {
         state.ui.isCreating = true
@@ -297,7 +291,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Failed to create user'
       })
     
-    // Update User
     builder
       .addCase(updateUser.pending, (state) => {
         state.ui.isUpdating = true
@@ -313,7 +306,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Failed to update user'
       })
     
-    // Delete User
     builder
       .addCase(deleteUser.pending, (state) => {
         state.ui.isDeleting = true
@@ -333,13 +325,11 @@ const userSlice = createSlice({
   }
 })
 
-// Export Entity Adapter Selectors
 export const {
   selectAll: selectAllUsers,
   selectById: selectUserById
 } = usersAdapter.getSelectors((state) => state.users)
 
-// Export Actions
 export const {
   setSelectedUser,
   clearSelectedUser,

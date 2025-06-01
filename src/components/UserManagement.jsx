@@ -103,7 +103,6 @@ const UserManagement = () => {
     address: { street: '', suite: '', city: '', zipcode: '' }
   })
 
-  // Transform users data to include real API properties (server-paginated data)
   const transformedUsers = users.map(user => ({
     ...user,
     location: user.address ? `${user.address.city}, ${user.address.zipcode}` : 'Unknown',
@@ -113,7 +112,6 @@ const UserManagement = () => {
     website: user.website || 'N/A'
   }))
 
-  // Filter users based on company (client-side filtering for display only)
   const filteredUsers = transformedUsers.filter(user => {
     if (filterType === 'all') return true
     if (filterType === 'has-company') return user.companyName && user.companyName !== 'N/A'
@@ -121,16 +119,13 @@ const UserManagement = () => {
     return true
   })
   
-  // Effects
   useEffect(() => {
-    // Fetch users with current pagination settings
     dispatch(fetchUsers({ 
       page: paginationInfo.currentPage, 
       limit: paginationInfo.itemsPerPage 
     }))
   }, [dispatch, paginationInfo.currentPage, paginationInfo.itemsPerPage])
 
-  // Search effect with debouncing
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (filters.search) {
@@ -145,12 +140,11 @@ const UserManagement = () => {
           limit: paginationInfo.itemsPerPage 
         }))
       }
-    }, 300) // 300ms debounce
+    }, 300) 
 
     return () => clearTimeout(timeoutId)
   }, [dispatch, filters.search, paginationInfo.itemsPerPage])
   
-  // Pagination handlers
   const handlePageChange = (event, newPage) => {
     const targetPage = newPage + 1
     dispatch(setCurrentPage(targetPage))
@@ -187,7 +181,6 @@ const UserManagement = () => {
     }
   }
   
-  // Event handlers
   const handleSearch = (event) => {
     dispatch(setSearchFilter(event.target.value))
   }
@@ -242,7 +235,6 @@ const UserManagement = () => {
       })
             } 
 
-    // Only close the menu, don't clear selectedUser (we need it for form submission)
     setAnchorEl(null)
   }
 
@@ -412,7 +404,6 @@ const UserManagement = () => {
               </Stack>
         
         
-
       {error && (
         <Alert 
           severity="error" 
