@@ -37,7 +37,7 @@ export const fetchUsers = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
   'users/createUser',
-  async (userData, { rejectWithValue, dispatch, getState }) => {
+  async (userData, { rejectWithValue }) => {
     try {
       const response = await fetch('https://jsonplaceholder.typicode.com/users', {
         method: 'POST',
@@ -53,13 +53,7 @@ export const createUser = createAsyncThunk(
       
       const newUser = await response.json()
       const userWithId = { ...newUser, id: Date.now() }
-      
-      const { pagination } = getState().users
-      dispatch(fetchUsers({ 
-        page: pagination.currentPage, 
-        limit: pagination.itemsPerPage 
-      }))
-      
+
       return userWithId
     } catch (error) {
       return rejectWithValue(error.message)
@@ -69,7 +63,7 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'users/updateUser',
-  async ({ id, userData }, { rejectWithValue, dispatch, getState }) => {
+  async ({ id, userData }, { rejectWithValue }) => {
     try {
       const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
         method: 'PUT',
@@ -85,13 +79,6 @@ export const updateUser = createAsyncThunk(
       
       const updatedUser = await response.json()
       const userWithId = { ...updatedUser, id }
-      
-      const { pagination } = getState().users
-      dispatch(fetchUsers({ 
-        page: pagination.currentPage, 
-        limit: pagination.itemsPerPage 
-      }))
-      
       return userWithId
     } catch (error) {
       return rejectWithValue(error.message)
@@ -101,7 +88,7 @@ export const updateUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   'users/deleteUser',
-  async (userId, { rejectWithValue, dispatch, getState }) => {
+  async (userId, { rejectWithValue }) => {
     try {
       const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {
         method: 'DELETE',
@@ -111,11 +98,7 @@ export const deleteUser = createAsyncThunk(
         throw new Error('Failed to delete user')
       }
       
-      const { pagination } = getState().users
-      dispatch(fetchUsers({ 
-        page: pagination.currentPage, 
-        limit: pagination.itemsPerPage 
-      }))
+      
       
       return userId
     } catch (error) {
@@ -282,9 +265,10 @@ const userSlice = createSlice({
         state.ui.isCreating = true
         state.error = null
       })
-      .addCase(createUser.fulfilled, (state) => {
+      .addCase(createUser.fulfilled, (state, action) => {
         state.ui.isCreating = false
         state.ui.showCreateModal = false
+        usersAdapter.addOne(state, action.payload)
       })
       .addCase(createUser.rejected, (state, action) => {
         state.ui.isCreating = false
@@ -300,6 +284,10 @@ const userSlice = createSlice({
         state.ui.isUpdating = false
         state.ui.showEditModal = false
         state.selectedUser = action.payload
+        usersAdapter.updateOne(state, {
+          id: action.payload.id,
+          changes: action.payload
+        })
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.ui.isUpdating = false
@@ -315,7 +303,8 @@ const userSlice = createSlice({
         state.ui.isDeleting = false
         
         if (state.selectedUser?.id === action.payload) {
-          state.selectedUser = null
+          state.selectedUser = null;
+          usersAdapter.removeOne(state, action.payload);
         }
       })
       .addCase(deleteUser.rejected, (state, action) => {
