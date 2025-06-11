@@ -4,23 +4,19 @@ import {
   Box,
   Typography,
   FormControl,
-  FormControlLabel,
   Radio,
-  RadioGroup,
   Card,
-  CardContent,
   FormHelperText,
   CardActionArea ,
   CardMedia
 } from "@mui/material";
-import { School, Person } from "@mui/icons-material";
 import { ROLE_OPTIONS } from "../constants/formConfig";
 
 const RoleSelection = () => {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext(); 
 
   const rolesWithIcons = ROLE_OPTIONS.map((role) => ({
     ...role,

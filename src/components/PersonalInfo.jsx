@@ -80,7 +80,6 @@ const PersonalInfo = () => {
                 placeholder="Email *"
                 type="email"
                 variant="outlined"
-                disabled ={true}
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 className="mb-4"

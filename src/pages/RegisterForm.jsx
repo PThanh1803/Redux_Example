@@ -35,7 +35,6 @@ const RegisterForm = () => {
     resolver: yupResolver(validationSchemas[currentStep - 1]),
     defaultValues: {
       role: "educator",
-      role1: "",
       fullName: "",
       email: "phambathanh1803@gmail.com",
       phoneNumber: "",
@@ -77,36 +76,27 @@ const RegisterForm = () => {
         }
         console.log("Form submitted:", data);
         alert(
-          "Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm. " +
-            data.email +
-            " " +
-            data.phoneNumber +
-            " " +
-            data.fullName +
-            " " +
-            data.role +
-            " " +
-            data.greeting +
-            " " +
-            data.linkedinUrl +
-            " " +
-            data.socialMediaUrl +
-            " " +
-            data.menteeLevel.join(", ") +
-            " " +
-            data.sharingContent.join(", ") +
-            " " +
-            data.yearOfExperience +
-            " " +
-            data.areaOfExpertise +
-            " " +
-            data.certifications +
-            " " +
-            data.educationBackground
+        "Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm.\n" +
+          "Email: " + data.email + "\n" +
+          "Số điện thoại: " + data.phoneNumber + "\n" +
+          "Họ tên: " + data.fullName + "\n" +
+          "Vai trò: " + data.role + "\n" +
+          "Lời chào: " + data.greeting + "\n" +
+          "LinkedIn: " + data.linkedinUrl + "\n" +
+          "Mạng xã hội: " + data.socialMediaUrl + "\n" +
+          "Mentee level: " + data.menteeLevel.join(", ") + "\n" +
+          "Nội dung chia sẻ: " + data.sharingContent.join(", ") + "\n" +
+          (data.role === "educator"
+            ? "Số năm kinh nghiệm: " + data.yearOfExperience + "\n" +
+              "Chuyên môn: " + data.areaOfExpertise + "\n" +
+              "Chứng chỉ: " + data.certifications + "\n" +
+              "Trình độ học vấn: " + data.educationBackground + "\n"
+            : "")
         );
+        reset();
         setCompletedSteps(new Set());
         setCurrentStep(1);
-        reset();
+        
       }
     } catch (error) {
       console.error("Error during submission:", error);
@@ -219,7 +209,7 @@ const RegisterForm = () => {
               }
               onClick={() => handleStepClick(index + 1)}
               className="normal-case px-4 min-w-[120px] rounded-lg transition-colors"
-              disabled={Math.abs((index + 1) - currentStep) > 1 || index+1 > currentStep && !isValid}
+              disabled={(Math.abs((index + 1) - currentStep) > 1 && (index+1 - currentStep)> 0) || index+1 > currentStep && !isValid}
             />
           ))} 
         </Tabs>

@@ -65,7 +65,7 @@ const InputWrapper = styled("div")(({ theme }) => ({
     border: 0,
     margin: 0,
     outline: 0,
-    fontSize: "14px",
+    fontSize: "1rem",
     "&::placeholder": {
       color: theme.palette.text.secondary,
       opacity: 1,
@@ -328,20 +328,20 @@ const ContentSharing = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    value={yearOfExperience}
                     onChange={(e) => {
-                      field.onChange(e);
-                      setValue("yearOfExperience", e.target.value, { shouldValidate: true });
-                    }}
+                        const newValue = e.target.value === '' ? '' : Number(e.target.value);
+                        field.onChange(newValue);
+                        setValue("yearOfExperience", newValue, { shouldValidate: true });
+                    }}                 
+                    type="number"
                     fullWidth
                     placeholder="Số năm kinh nghiệm *"
                     variant="outlined"
                     error={!!errors.yearOfExperience}
                     helperText={errors.yearOfExperience?.message}
                     className="mb-4"
-                    type="number"
                     slotProps={{
-                      htmlInput: { min: 0 }
+                      input: { min: 0 }
                     }}
                   />
                 )}
